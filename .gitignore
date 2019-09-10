@@ -3,4 +3,4 @@
 .project
 .springBeans
 /target/
-db.properties
+db.properties 
