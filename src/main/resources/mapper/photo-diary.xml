@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pt.diary.mapper.PhotoDiaryMapper">
+	<select id="selectPhotoDiaryList" resultType="pdvo">
+		select * from photo_diary
+	</select>
+	
+	<select id="selectPhotoDiary" resultType="pdvo">
+		select * from photo_diary where pd_num=#{pdNum}
+	</select>
+	
+	<insert id="insertPhotoDiary" parameterType="pdvo">
+		insert into photo_diary(
+			pd_num
+			,pd_title
+			,pd_content
+			<if test="pdImg1!=null">
+				,pd_img1
+			</if>
+			<if test="pdImg2!=null">
+				,pd_img2
+			</if>
+			<if test="pdImg3!=null">
+				,pd_img3
+			</if>
+			<if test="pdImg4!=null">
+				,pd_img4
+			</if>
+			<if test="pdImg5!=null">
+				,pd_img5
+			</if>
+			,pd_credat
+			,pd_cretim
+			,pd_modidat
+			,pd_moditim
+		)
+		values(
+			seq_pd_num.nextval
+			,#{pdTitle}
+			,#{pdContent}
+			<if test="pdImg1!=null">
+				,#{pd_img1}
+			</if>
+			<if test="pdImg2!=null">
+				,#{pd_img2}
+			</if>
+			<if test="pdImg3!=null">
+				,#{pd_img3}
+			</if>
+			<if test="pdImg4!=null">
+				,#{pd_img4}
+			</if>
+			<if test="pdImg5!=null">
+				,#{pd_img5}
+			</if>
+			,to_char(sysdate,'YYYYMMDD')
+			,to_char(sysdate,'HH24MISS')
+			,to_char(sysdate,'YYYYMMDD')
+			,to_char(sysdate,'HH24MISS')
+		)
+	</insert>
+	
+	<update id="updatePhotoDiary" parameterType="pdvo">
+		update photo_diary
+		<set>
+			<if test="pdTitle!=null">
+				pd_title=#{pdTitle},
+			</if>
+			<if test="pdContent!=null">
+				pd_content=#{pdContent},
+			</if>
+			<if test="pdImg1!=null">
+				pd_img1=#{pdImg1},
+			</if>
+			<if test="pdImg2!=null">
+				pd_img2=#{pdImg2},
+			</if>
+			<if test="pdImg3!=null">
+				pd_img3=#{pdImg3},
+			</if>
+			<if test="pdImg4!=null">
+				pd_img4=#{pdImg4},
+			</if>
+			<if test="pdImg5!=null">
+				pd_img5=#{pdImg5},
+			</if>
+			pd_modidat=to_char(sysdate,'YYYYMMDD'),
+			pd_moditim=to_char(sysdate,'HH24MISS')
+		</set>
+		<where>
+			pd_num=#{pdNum}
+		</where>
+	</update>
+	
+	<delete id="deletePhotoDiary">
+		delete from photo_diary where pd_num=#{pdNum}
+	</delete>
+</mapper>
