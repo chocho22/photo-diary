@@ -3,21 +3,35 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/config/db.properties"/>
+		<property name="fileEncoding" value="utf-8"/>
+	</bean>
+	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
 		
-	<bean id="hikariDS" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-		<property name="username" value="cho"/>
-		<property name="password" value="12345678"/>
-		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+	<bean id="hikariDS" class="com.zaxxer.hikari.HikariDataSource">
+		<property name="jdbcUrl" value="${db.url}"/>
+		<property name="username" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+		<property name="driverClassName" value="${db.driver}"/>
+		<property name="maximumPoolSize" value="10"/>
+		<property name="minimumIdle" value="5"/>
 	</bean>
+	
 	<bean id="proxyDS" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
 		<constructor-arg ref="hikariDS"/>
 	</bean>
-	<bean id="ssFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="hikariDS"/>
-		<property name="configLocation" value="classpath:config/mybatis-config.xml"/>
+	
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="proxyDS"/>
+		<property name="configLocation" value="classpath:config/mybatis-config.xml"></property>
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"/>
 	</bean>
 	
 </beans>
